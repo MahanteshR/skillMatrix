@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        body{
+            background-image: url("static/res/edit_pro.png");
+            font-family: 'Cairo', sans-serif;
+        }
+    </style>
+    <div class="container-fluid" style="padding-left: 30px;">
+        <form action="" method="post" id="form">
+
+            <div class="form-group">
+                <label for="username">Edit your username : </label>
+                <input type="text" class="form-control" name="username" id="username" value={{name}} style="width: 25%;" disabled>
+            </div>
+
+
+            <div class="form-group">
+                <label for="username">Edit your location : </label>
+                <input type="text" class="form-control" name="username" id="location" value={{loc}} style="width: 25%;">
+            </div>
+
+    <script>
+        var check = function() {
+          if (document.getElementById('password').value ==
+            document.getElementById('confirm_password').value) {
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'matching';
+          } else {
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'not matching';
+          }
+        }
+    </script>
+
+             <div class="form-group">
+                <label for="password">Set New password : </label>
+                <input type="password" class="form-control" name="password" id="password" onkeyup='check();' style="width: 25%;">
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm New password: </label>
+              <input type="password" class="form-control" name="confirm_password" id="confirm_password" onkeyup='check();' style="width: 25%;">
+            </div>
+            <span id='message'></span>
+
+            <br>
+            <button style="margin-left: 105px;" type="submit" class="btn btn-primary" form="form" value="Submit" id="button">Submit</button>
+            <br>
+        </form>
+    </div>
+{% endblock %}

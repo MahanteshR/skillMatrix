@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        body{
+             background-image: url("{{url_for('static', filename='res/homepage.png')}}");
+            background-size: cover;
+        }
+        .container-fluid
+        {
+            height: 450px;
+            width: 320px;
+            font-family: 'QuickSand', sans-serif;
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="card text-center" style="width: 320px;">
+            <br>
+        <h1>Sign In</h1>
+        <form class="card-body" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p style="text-align: left;padding-left: 3px;">
+                {{ form.username.label }}<br>
+                {{ form.username(size=32) }}<br>
+                {% for error in form.username.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p style="text-align: left;padding-left: 3px;">
+                {{ form.password.label }}<br>
+                {{ form.password(size=32) }}<br>
+                {% for error in form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p style="text-align: left;padding-left: 9px;">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+            <p>{{ form.submit() }}</p>
+        </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" rel="stylesheet">
+    <style>
+        body{
+            background-image: url("{{url_for('static', filename='res/search2.png')}}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+
+        #dataTable{
+            background-image: url("static/res/bg.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Rubik', sans-serif;
+        }
+
+          #results{
+            background-image: url("static/res/bg.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+              font-family: 'Cairo', sans-serif;
+        }
+
+
+    </style>
+    <script language="javascript">
+        function addRow(tableID)
+        {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            var colCount = table.rows[0].cells.length;
+            for(var i=0; i<colCount; i++)
+            {
+                var newcell = row.insertCell(i);
+                newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+                if(i==0){
+                    newcell.children[0].setAttribute("name","skills"+rowCount)
+                    }
+                else if(i==1){
+                    newcell.children[0].setAttribute("name","experience"+rowCount)
+                    }
+                else if(i==2){
+                    newcell.children[0].setAttribute("name","rating"+rowCount)
+                    }
+                else if(i==3){
+                    newcell.children[0].setAttribute("name","interest"+rowCount)
+                    }
+                else{
+                    newcell.children[0].setAttribute("name","chk"+rowCount)
+                }
+                console.log(newcell.children[0])
+            }
+        }
+        function deleteRow(tableID) {
+            try {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+            var colcnt = document.getElementById(tableID).rows[0].cells.length
+            for(var i=0; i<rowCount; i++) {
+                var row = table.rows[i];
+                var chkbox = row.cells[colcnt-1].childNodes[0];
+                if(null != chkbox && true === chkbox.checked)
+                {
+                    if(rowCount <= 2)
+                    {
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+            var table = document.getElementById(tableID);
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                  row.id="row"+i;
+               for (var j = 0, col; col = row.cells[j]; j++) {
+                 col.id="col"+i;
+                 if(j==0)
+                 {
+                 }
+                 else if(j==1)
+                 {
+                }
+               }
+            }
+            }catch(e) {
+                alert(e);
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <link href="https://code.jquery.com/jquery-3.3.1.js">
+    <link href="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js">
+    <link href="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js">
+    <form action="" method="post" id="form" class="container-fluid" style="border-radius: 42px;">
+        <div style="height:250px;overflow:auto;" style="border-radius: 42px;">
+            <h4 style=" font-family: 'Rubik', sans-serif;margin-left: 2px;color: white">Search for skills :</h4>
+            <table id="dataTable" class="table table-hover rounded shadow-lg p-4 mb-4 bg-white" style="border-radius: 12px;">
+            <thead>
+                <tr>
+                  <th scope="col"><h5>Skills</h5></th>
+                  <th scope="col" data-toggle="tooltip" data-placement="top" title="in years"><h5>Experience</h5></th>
+                  <th scope="col"><h5>Rating(on a scale of 10)</h5></th>
+                  <th scope="col"><h5>Interest(on a scale of 5)</h5></th>
+                  <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(0,len) %}
+                <tr>
+                    <td>
+                        <select class="form-control" id="skills" name={{"skills"+(i+1)|string}} style="width: 120px">
+                            <option value='{{vals[i*4]}}' selected>{{vals[i*4]}}</option>
+                            {% if vals[i*4] != "any" %}
+                            <option value="any">Any</option>
+                            {% endif %}
+                            {% for x in s %}
+                                {% if x.value != vals[i*4] %}
+                                    <option value='{{ x.value }}'>{{x.value}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" id="experience" class="form-control" name={{"experience"+(i+1)|string}} value='{{vals[i*4+1]}}' style="width: 220px" required>
+                    </td>
+                    <td>
+                        <select class="form-control" id="rating" name={{"rating"+(i+1)|string}} style="width: 80px">
+                            <option value='{{vals[i*4+2]}}' selected>{{vals[i*4+2]}}</option>
+                            {% for x in range(0,11) %}
+                                {% if x != (vals[i*4+2]|int) %}
+                                    <option value='{{ x }}'>{{x}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" id="interest" name={{"interest"+(i+1)|string}} style="width: 80px">
+                            <option value='{{vals[i*4+3]}}' selected>{{vals[i*4+3]}}</option>
+                            {% for x in range(1,6) %}
+                                {% if x != (vals[i*4+3]|int) %}
+                                    <option value='{{ x }}'>{{x}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td id="col_0_0"><input type="checkbox" name="chk"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        </div>
+        <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Add Skill" onclick="addRow('dataTable')">
+        <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Delete Skill" onclick="deleteRow('dataTable')">
+        <br>
+    </form>
+    <button style="margin-left:auto;margin-right:auto;display:block;padding-top: 5px;" type="submit" class="btn btn-primary" form="form" value="Submit" id="button">Search</button>
+    <br>
+        <script>
+        function myFunction() {
+          var table, tr, i;
+          input0 = document.getElementById("id");
+          input1 = document.getElementById("name");
+          input2 = document.getElementById("mail");
+          input3 = document.getElementById("practice");
+          input4 = document.getElementById("loc");
+          input5 = document.getElementById("exp");
+          // input6 = document.getElementById("avgrating");
+          // input7 = document.getElementById("avginterest");
+          filter0 = input0.value.toUpperCase();
+          filter1 = input1.value.toUpperCase();
+          filter2 = input2.value.toUpperCase();
+          filter3 = input3.value.toUpperCase();
+          filter4 = input4.value.toUpperCase();
+          filter5 = input5.value.toUpperCase();
+          // filter6 = input5.value.toUpperCase();
+          // filter7 = input5.value.toUpperCase();
+          table = document.getElementById("results");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td0 = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            td3 = tr[i].getElementsByTagName("td")[3];
+            td4 = tr[i].getElementsByTagName("td")[4];
+            td5 = tr[i].getElementsByTagName("td")[5];
+            // td6 = tr[i].getElementsByTagName("td")[6];
+            // td7 = tr[i].getElementsByTagName("td")[7];
+            if (td1 || td0 || td2 || td3 || td4|| td5) {
+              txt0 = td0.textContent || td0.innerText;
+              txt1 = td1.textContent || td1.innerText;
+              txt2 = td2.textContent || td2.innerText;
+              txt3 = td3.textContent || td3.innerText;
+              txt4 = td4.textContent || td4.innerText;
+              txt5 = td5.textContent || td5.innerText;
+              // txt6 = td6.textContent || td6.innerText;
+              // txt7 = td7.textContent || td7.innerText;
+              if (txt0.toUpperCase().indexOf(filter0) > -1 && txt1.toUpperCase().indexOf(filter1) > -1 && txt2.toUpperCase().indexOf(filter2) > -1 && txt3.toUpperCase().indexOf(filter3) > -1 && txt4.toUpperCase().indexOf(filter4) > -1 && txt5.toUpperCase().indexOf(filter5) > -1)
+              {
+                  tr[i].style.display = "";
+              }
+              else
+              {
+                  tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        </script>
+        <div class="container-fluid">
+            <h4 style="margin-left: 2px;color: white;font-family: Rubik">Results :</h4>
+         <table  id="results" class="table table-hover rounded shadow-lg p-4 mb-4 bg-white">
+            <thead>
+                <tr>
+                    <th style="width: 120px;"><input type="text" class="form-control" placeholder="Employee ID" id="id" data-toggle="tooltip" data-placement="top" title="Filter by Employee ID's" onkeyup="myFunction()" style="width: 100%;"></th>
+                    <th style="width: 140px;"><input type="text" class="form-control" placeholder="Employee Name" id="name" data-toggle="tooltip" data-placement="top" title="Filter by Employee Name"onkeyup="myFunction()" style="width: 100%;"></th>
+                    <th style="width: 180px;"><input type="text" class="form-control" placeholder="Employee e-mail" id="mail" data-toggle="tooltip" data-placement="top" title="Filter by Employee mail" onkeyup="myFunction()" style="width: 100%;"></th>
+                    <th style="width: 130px;"><input type="text" class="form-control" placeholder="Practice" id="practice" onkeyup="myFunction()" data-toggle="tooltip" data-placement="top" title="Filter by practice"style="width: 100%;"></th>
+                    <th style="width: 110px;"><input type="text" class="form-control" placeholder="Location" id="loc" onkeyup="myFunction()" data-toggle="tooltip" data-placement="top" title="Filter by location" style="width: 100%;"></th>
+                    <th style="width: 140px;"><input type="text" class="form-control" placeholder="Industry Experience" id="exp" onkeyup="myFunction()" data-toggle="tooltip" data-placement="top" title="Filter by Experience" style="width: 100%;" ></th>
+                    <th style="width: 126px;"></th>
+                    <th style="width: 120px;"></th>
+                    <th style="width: 120px;"><img src="../static/res/funnel.png" style="width: 23px; height: 27px; padding-bottom: 4px;"></th>
+                </tr>
+                <tr>
+                    <th scope="col">Employee ID</th>
+                    <th scope="col">Employee Name</th>
+                    <th scope="col">Employee e-mail</th>
+                    <th scope="col">Practice</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Industry Experience</th>
+                    <th scope="col">Avg Rating</th>
+                    <th scope="col">Avg Interest</th>
+                    <th scope="col">Statistics</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for i in result %}
+                <tr>
+                    <td>{{ i[0].id }}</td>
+                    <td>{{ i[0].username }}</td>
+                    <td>{{ i[0].email }}</td>
+                    <td>{{ i[0].practice }}</td>
+                    <td>{{ i[0].location }}</td>
+                    <td>{{ i[0].overall_exp }}</td>
+                    {% if i[1] == 1 %}
+                    <td>{{ i[3] }}  ( <a href="#" style="color: red" data-toggle="popover" title="Manager didn't yet rate his skills" data-content="Manager didn't yet rate his skills"><span>&#33;</span></a> )</td>
+                    {% else %}
+                    <td>{{ i[3] }}</td>
+                    {% endif %}
+                    <td>{{ i[2] }}</td>
+                    <td><a href="{{ url_for('emp_stats', id=i[0].id ) }}">Check Stats</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+{% endblock %}

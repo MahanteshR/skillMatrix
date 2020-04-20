@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        body{
+            background-image: url("static/res/add_emp.png");
+        }
+
+        .container{
+            font-family: 'QuickSand', sans-serif;
+        }
+
+
+        #new_tech_form{
+          border-radius: 12px;
+          width: 100%;
+          height: 90%;
+        }
+
+         #new_tech{
+                background-image:  url("static/res/bg.jpg");
+              background-size: cover;background-repeat: no-repeat;
+          border-radius: 12px;
+          width: 100%;
+          height: 90%;
+        }
+
+         #new_loc_form{
+              border-radius: 12px;
+              width: 100%;
+              height: 90%;
+         }
+        #new_loc{
+            background-image:  url("static/res/bg.jpg");
+             background-size: cover;background-repeat: no-repeat;
+          border-radius: 12px;
+          width: 100%;
+          height: 90%;
+        }
+
+        #new_prac_form{
+              border-radius: 12px;
+              width: 100%;
+              height: 90%;
+         }
+        #new_prac{
+             background-image:  url("static/res/bg.jpg");
+             background-size: cover;background-repeat: no-repeat;
+          border-radius: 12px;
+          width: 100%;
+          height: 90%;
+        }
+
+    </style>
+
+    <script language="javascript">
+        function addRow(tableID)
+        {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            var colCount = table.rows[0].cells.length;
+
+            for(var i=0; i<colCount; i++)
+            {
+                var newcell = row.insertCell(i);
+                newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+                if(i==0){
+                    newcell.children[0].setAttribute("name",tableID+rowCount)
+                    newcell.children[0].setAttribute("value","")
+                    }
+                else{
+                    newcell.children[0].setAttribute("name","chk"+rowCount)
+                    }
+                console.log(newcell.children[0])
+            }
+        }
+        function deleteRow(tableID) {
+            try {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+             var colcnt = document.getElementById(tableID).rows[0].cells.length
+            for(var i=0; i<rowCount; i++) {
+                var row = table.rows[i];
+                var chkbox = row.cells[colcnt-1].childNodes[0];
+                if(null != chkbox && true === chkbox.checked)
+                {
+                    if(rowCount <= 2)
+                    {
+                        alert("Cannot delete all the rows.");
+                        break;
+                    }
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+            }
+            var table = document.getElementById(tableID);
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                  row.id="row"+i;
+               for (var j = 0, col; col = row.cells[j]; j++) {
+                 col.id="col"+i;
+                 if(j==0)
+                 {
+                 }
+                 else if(j==1)
+                 {
+                }
+               }
+            }
+            }catch(e) {
+                alert(e);
+            }
+        }
+    </script>
+
+
+    <div class="container">
+        <div class="row">
+             <div class="col">
+            <form action="" method="post" id="new_tech_form" class="container-fluid">
+                <br>
+                <div style="height:280px; overflow:auto;" id="tech">
+                    <table id="new_tech" class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th><h5>Add New Technology</h5></th>
+                          <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in range(0,s) %}
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" name={{"new_tech"+(i+1)|string}} style="width: 200px" value='{{ skills[i].value }}'>
+                            </td>
+                            <td><input type="checkbox" name="chk"></td>
+                        </tr>
+                    {% endfor %}
+                    {% if s == 0 %}
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" name={{"new_tech1"}} style="width: 200px">
+                            </td>
+                            <td><input type="checkbox" name="chk"></td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Add" onclick="addRow('new_tech')">
+            <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Delete" onclick="deleteRow('new_tech')">
+<!--            <button style="margin-left:auto;margin-right:auto;display:block;padding-top: 5px;" type="submit" class="btn btn-primary" form="new_tech_form" value="skills" name="flag" id="button_tech">Submit</button>-->
+            </form>
+                 <button style="margin-left:auto;margin-right:auto;display:block;padding-top: 5px;" type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalTech" name="flag">Submit</button>
+
+            <div class="modal fade" id="exampleModalTech" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTech" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelTech">Confirmation message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure about the changes?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" form="new_tech_form" value="skills" id="button_tech" name="flag">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+             </div>
+
+
+        <div class="col">
+            <form action="" method="post" id="new_loc_form" class="container-fluid">
+                <br>
+                <div style="height:280px;overflow:auto;">
+                    <table id="new_loc" class="table table-hover">
+                    <thead id="new_loc_head">
+                        <tr>
+                          <th><h5>Add New Locations</h5></th>
+                          <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in range(0,l) %}
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" name={{"new_tech"+(i+1)|string}} style="width: 200px" value='{{ loc[i].value }}'>
+                            </td>
+                            <td><input type="checkbox" name="chk"></td>
+                        </tr>
+                    {% endfor %}
+                    {% if l == 0 %}
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" name={{"new_tech1"}} style="width: 200px">
+                            </td>
+                            <td><input type="checkbox" name="chk"></td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Add" onclick="addRow('new_loc')">
+            <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Delete" onclick="deleteRow('new_loc')">
+            </form>
+<!--             <button style="margin-left:auto;margin-right:auto;display:block;padding-top: 5px;" type="submit" class="btn btn-primary" form="new_loc_form" value="location" name="flag" id="button_loc">Submit</button>-->
+            <button style="margin-left:auto;margin-right:auto;display:block;padding-top: 5px;" type="submit" class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalLoc" name="flag">Submit</button>
+
+             <div class="modal fade" id="exampleModalLoc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLoc" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelLoc">Confirmation message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure about the changes?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" form="new_loc_form" value="location" id="button_loc" name="flag">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+        </div>
+
+        <div class="col">
+            <form action="" method="post" id="new_prac_form" class="container-fluid">
+                <br>
+                <div style="height:280px;overflow:auto;">
+                    <table id="new_prac" class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th scope="col"><h5>Add New Practices</h5></th>
+                          <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in range(0,p) %}
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" name={{"new_tech"+(i+1)|string}} style="width: 200px" value='{{ pra[i].value }}'>
+                            </td>
+                            <td><input type="checkbox" name="chk"></td>
+                        </tr>
+                    {% endfor %}
+                    {% if p == 0 %}
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" name={{"new_tech1"}} style="width: 200px">
+                            </td>
+                            <td><input type="checkbox" name="chk"></td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Add" onclick="addRow('new_prac')">
+            <input style="margin-top: 10px;" type="button" class="btn btn-light" value="Delete" onclick="deleteRow('new_prac')">
+            </form>
+            <button style="margin-left:auto;margin-right:auto;display:block;padding-top: 5px;" type="submit" class="btn btn-primary"  data-toggle="modal" data-target="#exampleModal" name="flag">Submit</button>
+
+             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Confirmation message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure about the changes?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" form="new_prac_form" value="practice" id="button_prac" name="flag">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        </div>
+        </div>
+    </div>
+
+   {% endblock %}
