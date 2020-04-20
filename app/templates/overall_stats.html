@@ -19,8 +19,8 @@
   border-collapse: collapse;
   height: 220px;
   margin: auto;
+  padding: 2px;
   width: 80%;
-  padding:4px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   animation: float 5s infinite;
 }
@@ -31,7 +31,8 @@ th {
   border-right: 1px solid white;
   font-size: medium;
   font-weight: 100;
-  padding:22px;
+    padding-top: 12px;
+    padding-bottom: 12px;
   text-align: center;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   vertical-align:middle;
@@ -48,9 +49,9 @@ th:last-child {
 
 tr {
   border-top: 1px solid #C1C3D1;
-  color:#666B85;
+  color: black;
   font-size:10px;
-  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+  text-shadow: black;
 }
 
 tr:hover td {
@@ -301,61 +302,61 @@ td.text-center {
 					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 
                         <div class="card bg-dark text-white" style="height: 210px;">
-              <img class="card-img" src="../static/res/card6.png" alt="Card image" style="height: 210px;">
-              <div class="card-img-overlay">
-                <h5 class="card-title">Team Stats</h5>
+                          <img class="card-img" src="../static/res/card6.png" alt="Card image" style="height: 210px;">
+                          <div class="card-img-overlay">
+                            <h5 class="card-title">Team Stats</h5>
 
-                <p class="card-text">To view the stats of your team member :</p>
-                  <form id="form" action="" method="post">
-                    <select class="custom-select my-1 mr-sm-2" id="choose_employee" name="choose_employee" style="width: 200px;">
-                        {% for i in emp %}
-                             <option value={{i.id}}>{{ i.id }} - {{ i.username }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" form="form" value="Draw Chart" name="flag" class="btn btn-primary">select</button>
-                    </form>
-              </div>
-            </div>
+                            <p class="card-text">To view the stats of your team member :</p>
+                              <form id="form" action="" method="post">
+                                <select class="custom-select my-1 mr-sm-2" id="choose_employee" name="choose_employee" style="width: 200px;">
+                                    {% for i in emp %}
+                                         <option value={{i.id}}>{{ i.id }} - {{ i.username }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" form="form" value="Draw Chart" name="flag" class="btn btn-primary">select</button>
+                              </form>
+                          </div>
+                        </div>
 					</div>
 
 
                     <div class="tab-pane fade" id="nav-skill" role="tabpanel" aria-labelledby="nav-skill-tab">
-	<table id="table" class="table-fill" width="100%">
-  <col>
-  <colgroup span="2"></colgroup>
-  <colgroup span="2"></colgroup>
-  <tr>
-    <td rowspan="2"  class="text-center"></td>
-    {% for i in skills_table %}
-      <th colspan="2" scope="colgroup">{{ i.value }}</th>
-    {% endfor %}
-  </tr>
-  <tr>
-    {% for i in range(0,skills_len) %}
-      <th scope="col">Rating</th>
-      <th scope="col">Interest</th>
-    {% endfor %}
-  </tr>
-  {% for i in range(0,len) %}
-    <tr>
-      <th scope="row">{{ users[i].username }}</th>
-      {% for j in res[i] %}
-        {% if j is not none %}
-          {% if j[2] == 1 %}
-            <td>{{ j[0] }}  ( <a href="#" style="color: red" data-toggle="popover" title="Manager didn't yet rate his skills" data-content="Manager didn't yet rate his skills"><span>&#33;</span></a> )</td>
-          {% else %}
-            <td>{{ j[0] }}</td>
-          {% endif %}
-          <td>{{ j[1] }}</td>
-        {% else %}
-          <td colspan="2" scope="colgroup"> -- </td>
-        {% endif %}
-      {% endfor %}
-    </tr>
-  {% endfor %}
-</table>
-  <br>
-</div>
+                        <table id="table" class="table-fill">
+                          <col>
+                          <colgroup span="2"></colgroup>
+                          <colgroup span="2"></colgroup>
+                          <tr>
+                            <td rowspan="2"  class="text-center"></td>
+                            {% for i in skills_table %}
+                              <th colspan="2" scope="colgroup">{{ i.value }}</th>
+                            {% endfor %}
+                          </tr>
+                          <tr>
+                            {% for i in range(0,skills_len) %}
+                              <th scope="col">Rating</th>
+                              <th scope="col">Interest</th>
+                            {% endfor %}
+                          </tr>
+                          {% for i in range(0,len) %}
+                            <tr>
+                              <th scope="row">{{ users[i].username }}</th>
+                              {% for j in res[i] %}
+                                {% if j is not none %}
+                                  {% if j[2] == 1 %}
+                                    <td>{{ j[0] }}  ( <a href="#" style="color: red" data-toggle="popover" title="Manager didn't yet rate his skills" data-content="Manager didn't yet rate his skills"><span>&#33;</span></a> )</td>
+                                  {% else %}
+                                    <td>{{ j[0] }}</td>
+                                  {% endif %}
+                                  <td>{{ j[1] }}</td>
+                                {% else %}
+                                  <td colspan="2" scope="colgroup"> -- </td>
+                                {% endif %}
+                              {% endfor %}
+                            </tr>
+                          {% endfor %}
+                        </table>
+                      <br>
+                    </div>
 				</div>
 			</div>
 		</div>
