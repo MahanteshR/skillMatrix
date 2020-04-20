@@ -195,19 +195,21 @@ def manager_rating():
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
-    username = db.session.query(Users.username).filter_by(id=current_user.id).first()
-    location = db.session.query(Users.location).filter_by(id=current_user.id).first()
-    print(username, location)
+    user = Users.query.filter_by(id=current_user.id).first()
+    loc = LookupTable.query.filter_by(field="location").all()
     if request.method == 'POST':
-        u = Users.query.filter_by(id=current_user.id).first()
-        new_name = request.form.get('username')
-        new_pass = request.form.get('confirm_pw')
-        print(new_name, new_pass)
-        u.username = new_name
-        u.set_password(new_pass)
-        db.session.commit()
-        return redirect('dashboard')
-    return render_template('edit_profile.html', name=username[0], loc=location[0])
+        data = dict(request.form)
+        print(data)
+        if data["flag"] == "details":
+            user.location = data["location"]
+            user.overall_exp = data["exp"]
+            db.session.commit()
+            return render_template('edit_profile.html', user=user, l=loc)
+        else:
+            user.set_password(data["password"])
+            db.session.commit()
+            return render_template('edit_profile.html', user=user, l=loc)
+    return render_template('edit_profile.html', user=user, l=loc)
 
 
 @app.route('/overall_statistics', methods=['GET', 'POST'])
@@ -323,10 +325,10 @@ def new_employee():
     if request.method == 'POST':
         details = dict(request.form)
         print(details)
-        e = Users(id=details['id'], username=details['username'], email=details['mail'], location=details['location'],
-                  practice=details['practice'], manager_id=details['manager_id'])
-        e.set_password('1234')
-        db.session.add(e)
+        x = Users(id=details['id'], username=details['username'], email=details['mail'], location=details['location'],
+                  practice=details['practice'], manager_id=details['manager_id'], overall_exp=details['exp'])
+        x.set_password('1234')
+        db.session.add(x)
         db.session.commit()
         return render_template('new_employee.html', emp=e, l=loc, p=pra)
     return render_template('new_employee.html', emp=e, l=loc, p=pra)
@@ -394,28 +396,3 @@ def add_fields():
             return render_template('add_fields.html', skills=skills, s=len(skills), loc=loc, pra=new_pra,
                                    l=len(loc), p=len(new_pra))
     return render_template('add_fields.html', skills=skills, loc=loc, pra=pra, s=len(skills), l=len(loc), p=len(pra))
-
-
-@app.route('/skill_matrix')
-def skill_matrix():
-    skills = LookupTable.query.filter_by(field="skill").all()
-    users = Users.query.filter_by(admin='N').all()
-    final_res = []
-    for i in users:
-        user_res = []
-        print("---------new---------")
-        for j in skills:
-            x = db.session.query(db.func.max(Skills.skill_id)).group_by(Skills.skill, Skills.employee_id).filter(
-            Skills.employee_id == i.id, Skills.skill == j.value).first()
-            if x is not None:
-                skill = Skills.query.filter_by(skill_id=x[0]).first()
-                print(skill)
-                if skill.manager_rating is not None:
-                    user_res.append((round(0.4*skill.emp_rating+0.6*skill.manager_rating,2), skill.skill_interest, 0))
-                else:
-                    user_res.append((skill.emp_rating, skill.skill_interest, 1))
-            else:
-                user_res.append(None)
-        final_res.append(user_res)
-        print(final_res)
-    return render_template('table.html', skills=skills, skills_len=len(skills), res=final_res, users=users, len=len(users))
